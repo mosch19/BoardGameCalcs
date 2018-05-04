@@ -15,6 +15,12 @@ class EldrtichHorroCalc extends JFrame {
     private JSpinner mHealth;
     private JSpinner damage;
     private JSpinner fear;
+    private JLabel avgSanityLost;
+    private JLabel avgHealthLost;
+    private JLabel avgDamageDealt;
+    private JLabel playerDeath;
+    private JLabel monsterKilled;
+    private JRadioButton[] stateButtons;
     private static ArrayList<Result> resultList;
 
     EldrtichHorroCalc() {
@@ -52,10 +58,10 @@ class EldrtichHorroCalc extends JFrame {
         titles.setBackground(Color.BLACK);
         
         JPanel info = new JPanel();
-        info.setLayout(new GridLayout(1, 2, 5, 5));
+        info.setLayout(new GridLayout(2, 2, 5, 5));
 
         JPanel player = new JPanel();
-        player.setLayout(new GridLayout(2, 4, 5, 5));
+        player.setLayout(new GridLayout(3, 4, 5, 5));
         JLabel pHealthLabel = new JLabel("Health:");
         pHealth = new JSpinner(pHealthModel);
         JLabel sanityLabel = new JLabel("Sanity:");
@@ -64,6 +70,16 @@ class EldrtichHorroCalc extends JFrame {
         will = new JSpinner(willModel);
         JLabel strengthLabel = new JLabel("Strength:");
         strength = new JSpinner(strengthModel);
+        JLabel stateLabel = new JLabel("State:");
+        JRadioButton blessed = new JRadioButton("Blessed");
+        JRadioButton none = new JRadioButton("None");
+        JRadioButton cursed = new JRadioButton("Cursed");
+        stateButtons = new JRadioButton[] {blessed, none, cursed};
+        ButtonGroup states = new ButtonGroup();
+        states.add(blessed);
+        states.add(none);
+        states.add(cursed);
+        none.setSelected(true);
         player.add(pHealthLabel);
         player.add(pHealth);
         player.add(sanityLabel);
@@ -72,6 +88,10 @@ class EldrtichHorroCalc extends JFrame {
         player.add(will);
         player.add(strengthLabel);
         player.add(strength);
+        player.add(stateLabel);
+        player.add(blessed);
+        player.add(none);
+        player.add(cursed);
         // player.setBackground(Color.BLACK);
 
         JPanel monster = new JPanel();
@@ -94,8 +114,33 @@ class EldrtichHorroCalc extends JFrame {
         monster.add(why);
         // monster.setBackground(Color.BLACK);
 
+        JPanel results = new JPanel();
+        results.setLayout(new GridLayout(5, 2, 1, 1));
+        JLabel aslLabel = new JLabel("Avg sanity loss:");
+        avgSanityLost = new JLabel();
+        JLabel ahlLabel = new JLabel("Avg health loss:");
+        avgHealthLost = new JLabel();
+        JLabel addLabel = new JLabel("Avg damage dealt:");
+        avgDamageDealt = new JLabel();
+        JLabel pdLabel = new JLabel("Player death:");
+        playerDeath = new JLabel();
+        JLabel mkLabel = new JLabel("Monster death:");
+        monsterKilled = new JLabel();
+        results.add(aslLabel);
+        results.add(avgSanityLost);
+        results.add(ahlLabel);
+        results.add(avgHealthLost);
+        results.add(addLabel);
+        results.add(avgDamageDealt);
+        results.add(pdLabel);
+        results.add(playerDeath);
+        results.add(mkLabel);
+        results.add(monsterKilled);
+
         info.add(player);
         info.add(monster);
+        info.add(results);
+        info.add(new JLabel());
 
         JButton fight = new JButton("Simulate");
         fight.addActionListener(new myListener());
@@ -132,22 +177,41 @@ class EldrtichHorroCalc extends JFrame {
 
     public void showResults() {
         double[] analysis = analyze();
-        String results = "Average sanity loss: " + String.format("%.2f", analysis[0]) + '\n'
-        + "Average health loss: " + String.format("%.2f",analysis[1]) + '\n'
-        + "Average damage dealt: " + String.format("%.2f",analysis[2]) + '\n'
-        + "Player death %: " + String.format("%.2f",analysis[3] * 100) + "%" + '\n'
-        + "Monster killed %: " + String.format("%.2f",analysis[4] * 100) + "%";
+        avgSanityLost.setText(String.format("%.2f", analysis[0]));
+        avgHealthLost.setText(String.format("%.2f", analysis[1]));
+        avgDamageDealt.setText(String.format("%.2f", analysis[2]));
+        playerDeath.setText(String.format("%.2f", analysis[3] * 100) + " %");
+        monsterKilled.setText(String.format("%.2f", analysis[4] * 100) + " %");
 
-        JOptionPane.showMessageDialog(null, results);
+        // String results = "Average sanity loss: " + String.format("%.2f", analysis[0]) + '\n'
+        // + "Average health loss: " + String.format("%.2f",analysis[1]) + '\n'
+        // + "Average damage dealt: " + String.format("%.2f",analysis[2]) + '\n'
+        // + "Player death %: " + String.format("%.2f",analysis[3] * 100) + "%" + '\n'
+        // + "Monster killed %: " + String.format("%.2f",analysis[4] * 100) + "%";
+
+        // JOptionPane.showMessageDialog(null, results);
     }
 
     class myListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
+            int state = 0;
+            for(JRadioButton b : stateButtons) {
+                if(b.isSelected()) {
+                    switch(b.getText()) {
+                        case "Blessed":
+                            state = -1;
+                            break;
+                        case "Cursed":
+                            state = 1;
+                            break;
+                    }
+                }
+            }
             resultList = new ArrayList<>();
             Player player = null;
             Monster monster = null;
-            for(int i = 0; i < 30; i++) {
-                player = new Player((int) pHealth.getValue(), (int) sanity.getValue(), (int) strength.getValue(), (int) will.getValue(), 0);
+            for(int i = 0; i < 100; i++) {
+                player = new Player((int) pHealth.getValue(), (int) sanity.getValue(), (int) strength.getValue(), (int) will.getValue(), state);
                 monster = new Monster((int) mHealth.getValue(), (int) damage.getValue(), (int) fear.getValue());
                 Result result = Test.willTest(player, monster);
                 resultList.add(result);
