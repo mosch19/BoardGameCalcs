@@ -140,7 +140,6 @@ class EldrtichHorroCalc extends JFrame {
         info.add(player);
         info.add(monster);
         info.add(results);
-        info.add(new JLabel());
 
         JButton fight = new JButton("Simulate");
         fight.addActionListener(new myListener());
