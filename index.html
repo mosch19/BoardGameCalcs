@@ -1,23 +1,130 @@
 <html>
     <head>
         <link href="https://fonts.googleapis.com/css?family=Creepster|Crimson+Text" rel="stylesheet">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <title> Eldrtich Horror Combat Encounter Simulator </title>
         <style>
             .title {
-                display: inline-block;
                 font-family: "Crimson Text";
+                text-align: center;
+            }
+            .entry {
+              text-align: center;
+            }
+            .foot {
+              text-align: center;
+              font-size: 10;
             }
         </style>
     </head>
 
 
     <body>
-        <div>
-            <h2 class="title"> Player Stats </h2>
+        <div class="jumbotron text-center">
+            <h1> Eldritch Horror Combat Sim </h1>
+            <p> By: Somebody </p>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-6">
+              <h2 class="title"> Player Stats </h2>
+              <div class="row">
+                <div class="col-sm-6">
+                  <p class="entry"> Health: </p>
+                </div>
+                <div class="col-sm-6">
+                  <p class="entry"> This will be a spinner </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <p class="entry"> Sanity: </p>
+                </div>
+                <div class="col-sm-6">
+                  <p class="entry"> This will be a spinner </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <p class="entry"> Will: </p>
+                </div>
+                <div class="col-sm-6">
+                  <p class="entry"> This will be a spinner </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <p class="entry"> Strength: </p>
+                </div>
+                <div class="col-sm-6">
+                  <p class="entry"> This will be a spinner </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <p class="entry"> Number Rerolls: </p>
+                </div>
+                <div class="col-sm-6">
+                  <p class="entry"> This will be a spinner </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <p class="entry"> Status Effects: </p>
+                </div>
+                <div class="col-sm-6">
+                  <form>
+                    <input type="radio" name="status" value="-1"> Blessed </input>
+                    <input type="radio" name="status" value="1"> Cursed </input>
+                  </form>
+                </div>
+              </div>
+            </div>
+          <div class="col-sm-6">
             <h2 class="title"> Monster Stats </h2>
+            <div class="row">
+              <div class="col-sm-6">
+                <p class="entry"> Health: </p>
+              </div>
+              <div class="col-sm-6">
+                <p class="entry"> This will be a spinner </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <p class="entry"> Damage: </p>
+              </div>
+              <div class="col-sm-6">
+                <p class="entry"> This will be a spinner </p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <p class="entry"> Fear: </p>
+              </div>
+              <div class="col-sm-6">
+                <p class="entry"> This will be a spinner </p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-
+      </div>
+      <div class="container">
+        <button type="button" class="btn btn-primary center-block"> Fight! </button>
+      </div>
+      <div class="container">
+        <h2> Results </h2>
+        <!--Can toggle between panel-success or panel-failure depending on results-->
+        <div class="panel panel-success">
+          <div class="panel-heading"> Panel Header </div>
+          <div class="panel-body"> Panel Body </div>
+          <div class="panel-footer"> Panel Footer </div>
         </div>
+      </div>
+      <div class="container">
+        <p class="foot"> Note: This page has no affiliation to the designers/publishers. </p>
+      </div>
     </body>
 </html>
