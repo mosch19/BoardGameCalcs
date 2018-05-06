@@ -3,7 +3,10 @@
         <link href="https://fonts.googleapis.com/css?family=Creepster|Crimson+Text" rel="stylesheet">
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <title> Eldrtich Horror Combat Encounter Simulator </title>
         <style>
             .title {
@@ -13,11 +16,24 @@
             .entry {
               text-align: center;
             }
+            .spinner {
+              text-align: left;
+              display: inline-block;
+            }
             .foot {
               text-align: center;
               font-size: 10;
             }
         </style>
+        <script>
+        $( function() {
+          var pHealthSpinner = $("#pHealthSpinner").spinner();
+          var sanitySpinner = $("#sanitySpinner").spinner();
+          var willSpinner = $("#willSpinner").spinner();
+          var strengthSpinner = $("#strengthSpinner").spinner();
+          var rerollSpinner = $("#rerollSpinner").spinner();
+        })
+        </script>
     </head>
 
 
@@ -31,44 +47,34 @@
             <div class="col-sm-6">
               <h2 class="title"> Player Stats </h2>
               <div class="row">
-                <div class="col-sm-6">
-                  <p class="entry"> Health: </p>
-                </div>
-                <div class="col-sm-6">
-                  <p class="entry"> This will be a spinner </p>
-                </div>
+                <p class="spinner">
+                  <label for="pHealthSpinner"> Health:</label>
+                  <input id="pHealthSpinner" name="value">
+                </p>
               </div>
               <div class="row">
-                <div class="col-sm-6">
-                  <p class="entry"> Sanity: </p>
-                </div>
-                <div class="col-sm-6">
-                  <p class="entry"> This will be a spinner </p>
-                </div>
+                <p class="spinner">
+                  <label for="sanitySpinner"> Sanity:</label>
+                  <input id="sanitySpinner" name="value">
+                </p>
               </div>
               <div class="row">
-                <div class="col-sm-6">
-                  <p class="entry"> Will: </p>
-                </div>
-                <div class="col-sm-6">
-                  <p class="entry"> This will be a spinner </p>
-                </div>
+                <p class="spinner">
+                  <label for="willSpinner"> Will:</label>
+                  <input id="willSpinner" name="value">
+                </p>
               </div>
               <div class="row">
-                <div class="col-sm-6">
-                  <p class="entry"> Strength: </p>
-                </div>
-                <div class="col-sm-6">
-                  <p class="entry"> This will be a spinner </p>
-                </div>
+                <p class="spinner">
+                  <label for="strengthSpinner"> Strength:</label>
+                  <input id="strengthSpinner" name="value">
+                </p>
               </div>
               <div class="row">
-                <div class="col-sm-6">
-                  <p class="entry"> Number Rerolls: </p>
-                </div>
-                <div class="col-sm-6">
-                  <p class="entry"> This will be a spinner </p>
-                </div>
+                <p class="spinner">
+                  <label for="rerollSpinner"> Rerolls:</label>
+                  <input id="rerollSpinner" name="value">
+                </p>
               </div>
               <div class="row">
                 <div class="col-sm-6">
