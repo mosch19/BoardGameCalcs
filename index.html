@@ -103,6 +103,7 @@
           for(i = 0; i < 100; i++) {
             player = new Player(pHealth, sanity, strength, will, rerolls, state);
             monster = new Monster(mHealth, damage, fear);
+            // This line breaks the browser. Is there no way to hold objects in an array?
             // results.push(willTest(player, monster));
           }
           
@@ -130,11 +131,11 @@
         }
 
         function displayResults(analysis) {
-          Docuement.getElementById("avgHL").innerHTML = analysis.healthLost;
-          Docuement.getElementById("avgSL").innerHTML = analysis.sanityLost;
-          Docuement.getElementById("avgDD").innerHTML = analysis.damageDealt;
-          Docuement.getElementById("pD").innerHTML = analysis.playerDeath;
-          Docuement.getElementById("mD").innerHTML = analysis.monsterDeath;
+          Document.getElementById("avgHL").innerHTML = analysis.healthLost;
+          Document.getElementById("avgSL").innerHTML = analysis.sanityLost;
+          Document.getElementById("avgDD").innerHTML = analysis.damageDealt;
+          Document.getElementById("pD").innerHTML = analysis.playerDeath;
+          Document.getElementById("mD").innerHTML = analysis.monsterDeath;
         }
 
         function Player(health, sanity, strength, will, rerolls, state) {
