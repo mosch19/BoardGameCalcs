@@ -71,7 +71,14 @@
           var mHealthSpinner = $("#mHealthSpinner").spinner({min:0, max:10}).width(40).val(3);
           var damageSpinner = $("#damageSpinner").spinner({min:0, max:10}).width(40).val(3);
           var fearSpinner = $("#fearSpinner").spinner({min:0, max:10}).width(40).val(2);
+          $( "#getvalue" ).on( "click", function() {
+            alert( spinner.spinner( "value" ) );
+          });
         })
+
+        function objectInput() {
+          
+        }
 
         function Player(health, sanity, strength, will, rerolls, status) {
           this.health = health;
@@ -98,6 +105,7 @@
 
         function diceRoll(statusEffect) {
           if(Math.floor(Math.random() * 6) + 1 > statusEffect) {
+            alert(Math.floor(Math.random()));
             return true;
           } else {
             return false;
@@ -240,7 +248,7 @@
         </div>
       </div>
       <div class="container">
-        <button type="button" class="btn btn-primary btn-outline center-block"> Fight! </button>
+        <button type="button" class="btn btn-primary btn-outline center-block" onclick="objectInput();"> Fight! </button>
       </div>
       <div class="container">
         <h2> Results </h2>
