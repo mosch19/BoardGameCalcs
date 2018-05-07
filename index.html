@@ -71,28 +71,66 @@
           var mHealthSpinner = $("#mHealthSpinner").spinner({min:0, max:10}).width(40).val(3);
           var damageSpinner = $("#damageSpinner").spinner({min:0, max:10}).width(40).val(3);
           var fearSpinner = $("#fearSpinner").spinner({min:0, max:10}).width(40).val(2);
-          $( "#getvalue" ).on( "click", function() {
-            alert( spinner.spinner( "value" ) );
-          });
         })
 
+        jQuery.fn.extend({
+          readSpinner: function(spinner) {
+            return $(spinner).spinner("value");
+          },
+          getState: function() {
+            return $("input[name=state]:checked").val();
+          }
+        });
+
         function objectInput() {
-          
+          /*
+            There seems to be no variability when called repetitively.
+          */
+
+          pHealth = jQuery().readSpinner(pHealthSpinner);
+          sanity = jQuery().readSpinner(sanitySpinner);
+          strength = jQuery().readSpinner(strengthSpinner);
+          will = jQuery().readSpinner(willSpinner);
+          rerolls = jQuery().readSpinner(rerollSpinner);
+          state = jQuery().getState();
+
+          player = new Player(pHealth, sanity, strength, will, rerolls, state);
+
+          mHealth = jQuery().readSpinner(mHealthSpinner);
+          damage = jQuery().readSpinner(damageSpinner);
+          fear = jQuery().readSpinner(fearSpinner);
+
+          monster = new Monster(mHealth, damage, fear);
+
+          result = willTest(player, monster);
+          displayResults(result);
         }
 
-        function Player(health, sanity, strength, will, rerolls, status) {
+        function displayResults(result) {
+
+        }
+
+        function Player(health, sanity, strength, will, rerolls, state) {
           this.health = health;
           this.sanity = sanity;
           this.strength = strength;
           this.will = will;
           this.rerolls = rerolls;
-          this.status = status;
+          this.state = state;
+        }
+
+        Player.prototype.toString = function playerToString() {
+          return this.health + ", " + this.sanity + ", " + this.strength + ", " + this.will + ", " + this.state;
         }
 
         function Monster(health, damage, fear) {
           this.health = health;
           this.damage = damage;
           this.fear = fear;
+        }
+
+        Monster.prototype.toString = function monsterToString() {
+          return this.health + ", " + this.damage + ", " + this.fear;
         }
 
         function Result(sanityLost, healthLost, damageDealt, playerDeath, monsterDeath) {
@@ -103,34 +141,35 @@
           this.monsterDeath = monsterDeath;
         }
 
+        Result.prototype.toString = function resultToString() {
+          return this.sanityLost + ", " + this.healthLost + ", " + this.damageDealt + ", " + this.playerDeath + ", " + this.monsterDeath;
+        }
+
         function diceRoll(statusEffect) {
-          if(Math.floor(Math.random() * 6) + 1 > statusEffect) {
-            alert(Math.floor(Math.random()));
+          if(Math.floor(Math.random() * 6) + 1 > 4 + statusEffect) {
             return true;
           } else {
             return false;
           }
         }
 
-        function checkDead(creature, type) {
-          switch(type.value) {
-            case "monster":
-              return creature.health < 1;
-            case "player":
-              if(creature.health < 1 || creature.sanity < 1) {
-                return true;
-              } else {
-                return false;
-              }
-            default:
+        function checkDead(type, creature) {
+          if(type == "monster") {
+            return creature.health < 1;
+          } else if(type == "player") {
+            if(creature.health < 1 || creature.sanity < 1) {
+              return true;
+            } else {
               return false;
+            }
           }
         }
 
         function willTest(player, monster) {
           successes = 0;
+          sanityLost = 0;
           for(i = 0; i < player.will; i++) {
-            if(diceRoll(player.status)) {
+            if(diceRoll(player.state)) {
               successes++;
             }
           }
@@ -138,7 +177,7 @@
             sanityLost = successes - monster.fear;
             player.sanity -= sanityLost;
           }
-          if(checkDead(player, {"type":"player"})) {
+          if(checkDead("player", player)) {
             return new Result(sanityLost, 0, 0, true, false);
           } else {
             return strengthTest(player, monster, sanityLost);
@@ -147,8 +186,9 @@
 
         function strengthTest(player, monster, sanityLost) {
           successes = 0;
+          healthLost = 0;
           for(i = 0; i < player.strength; i++) {
-            if(diceRoll(player.status)) {
+            if(diceRoll(player.state)) {
               successes++;
             }
           }
@@ -157,7 +197,7 @@
             player.health -= healthLost;
           }
           monster.health -= successes;
-          return new Result(sanityLost, healthLost, successes, checkDead(player, {"type":"player"}), checkDead(monster, {"type":"monster"}));
+          return new Result(sanityLost, healthLost, successes, checkDead("player", player), checkDead("monster", monster));
         }
 
         </script>
@@ -209,8 +249,9 @@
                 </div>
                 <div class="col-sm-6">
                   <form>
-                    <input type="radio" name="status" value="-1"> Blessed </input>
-                    <input type="radio" name="status" value="1"> Cursed </input>
+                    <input type="radio" name="state" value="-1"> Blessed </input>
+                    <input type="radio" name="state" value="0"> None </input>
+                    <input type="radio" name="state" value="1"> Cursed </input>
                   </form>
                 </div>
               </div>
