@@ -20,19 +20,138 @@
               text-align: left;
               display: inline-block;
             }
+            .mSpinner {
+              text-align: left;
+              display: inline-block;
+              width: 20px;
+            }
             .foot {
               text-align: center;
               font-size: 10;
             }
+            .btn-outline {
+              background-color: transparent;
+              color: inherit;
+              transition: all .5s;
+            }
+            .btn-primary.btn-outline {
+              color: #428bca;
+            }
+            .btn-success.btn-outline {
+              color: #5cb85c;
+            }
+            .btn-info.btn-outline {
+              color: #5bc0de;
+            }
+            .btn-warning.btn-outline {
+              color: #f0ad4e;
+            }
+            .btn-danger.btn-outline {
+              color: #d9534f;
+            }
+            .btn-dark.btn-outline {
+              color: #343a40;
+            }
+            .btn-primary.btn-outline:hover,
+            .btn-success.btn-outline:hover,
+            .btn-info.btn-outline:hover,
+            .btn-warning.btn-outline:hover,
+            .btn-dark.btn-outline:hover,
+            .btn-danger.btn-outline:hover {
+              color: #fff;
+            }
         </style>
         <script>
         $( function() {
-          var pHealthSpinner = $("#pHealthSpinner").spinner();
-          var sanitySpinner = $("#sanitySpinner").spinner();
-          var willSpinner = $("#willSpinner").spinner();
-          var strengthSpinner = $("#strengthSpinner").spinner();
-          var rerollSpinner = $("#rerollSpinner").spinner();
+          var pHealthSpinner = $("#pHealthSpinner").spinner({min:0, max:10}).val(4);
+          var sanitySpinner = $("#sanitySpinner").spinner({min:0, max:10}).val(4);
+          var willSpinner = $("#willSpinner").spinner({min:0, max:10}).val(3);
+          var strengthSpinner = $("#strengthSpinner").spinner({min:0, max:10}).val(3);
+          var rerollSpinner = $("#rerollSpinner").spinner({min:0, max:2}).val(0);
+          var mHealthSpinner = $("#mHealthSpinner").spinner({min:0, max:10}).width(40).val(3);
+          var damageSpinner = $("#damageSpinner").spinner({min:0, max:10}).width(40).val(3);
+          var fearSpinner = $("#fearSpinner").spinner({min:0, max:10}).width(40).val(2);
         })
+
+        function Player(health, sanity, strength, will, rerolls, status) {
+          this.health = health;
+          this.sanity = sanity;
+          this.strength = strength;
+          this.will = will;
+          this.rerolls = rerolls;
+          this.status = status;
+        }
+
+        function Monster(health, damage, fear) {
+          this.health = health;
+          this.damage = damage;
+          this.fear = fear;
+        }
+
+        function Result(sanityLost, healthLost, damageDealt, playerDeath, monsterDeath) {
+          this.sanityLost = sanityLost;
+          this.healthLost = healthLost;
+          this.damageDealt = damageDealt;
+          this.playerDeath = playerDeath;
+          this.monsterDeath = monsterDeath;
+        }
+
+        function diceRoll(statusEffect) {
+          if(Math.floor(Math.random() * 6) + 1 > statusEffect) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+
+        function checkDead(creature, type) {
+          switch(type.value) {
+            case "monster":
+              return creature.health < 1;
+            case "player":
+              if(creature.health < 1 || creature.sanity < 1) {
+                return true;
+              } else {
+                return false;
+              }
+            default:
+              return false;
+          }
+        }
+
+        function willTest(player, monster) {
+          successes = 0;
+          for(i = 0; i < player.will; i++) {
+            if(diceRoll(player.status)) {
+              successes++;
+            }
+          }
+          if(successes < monster.fear) {
+            sanityLost = successes - monster.fear;
+            player.sanity -= sanityLost;
+          }
+          if(checkDead(player, {"type":"player"})) {
+            return new Result(sanityLost, 0, 0, true, false);
+          } else {
+            return strengthTest(player, monster, sanityLost);
+          }
+        }
+
+        function strengthTest(player, monster, sanityLost) {
+          successes = 0;
+          for(i = 0; i < player.strength; i++) {
+            if(diceRoll(player.status)) {
+              successes++;
+            }
+          }
+          if(successes < monster.damage) {
+            healthLost = successes - monster.damage;
+            player.health -= healthLost;
+          }
+          monster.health -= successes;
+          return new Result(sanityLost, healthLost, successes, checkDead(player, {"type":"player"}), checkDead(monster, {"type":"monster"}));
+        }
+
         </script>
     </head>
 
@@ -91,34 +210,37 @@
           <div class="col-sm-6">
             <h2 class="title"> Monster Stats </h2>
             <div class="row">
-              <div class="col-sm-6">
-                <p class="entry"> Health: </p>
+              <div class="col-sm-3">
+                <p class="mSpinner">
+                  <label for="mHealthSpinner"> Health:</label>
+                  <input id="mHealthSpinner" name="value">
+                </p>
               </div>
-              <div class="col-sm-6">
-                <p class="entry"> This will be a spinner </p>
+              <div class="col-sm-3">
+                <p class="mSpinner">
+                  <label for="damageSpinner"> Damage:</label>
+                  <input id="damageSpinner" name="value">
+                </p>
+              </div>
+              <div class="col-sm-3">
+                <p class="mSpinner">
+                  <label for="fearSpinner"> Fear:</label>
+                  <input id="fearSpinner" name="value">
+                </p>
               </div>
             </div>
             <div class="row">
               <div class="col-sm-6">
-                <p class="entry"> Damage: </p>
+                <button type="button" class="btn btn-danger btn-outline">Remove</button>
               </div>
               <div class="col-sm-6">
-                <p class="entry"> This will be a spinner </p>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-6">
-                <p class="entry"> Fear: </p>
-              </div>
-              <div class="col-sm-6">
-                <p class="entry"> This will be a spinner </p>
-              </div>
+                <button type="button" class="btn btn-success btn-outline">Add</button>
             </div>
           </div>
         </div>
       </div>
       <div class="container">
-        <button type="button" class="btn btn-primary center-block"> Fight! </button>
+        <button type="button" class="btn btn-primary btn-outline center-block"> Fight! </button>
       </div>
       <div class="container">
         <h2> Results </h2>
