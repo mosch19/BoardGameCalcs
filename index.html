@@ -94,20 +94,47 @@
           rerolls = jQuery().readSpinner(rerollSpinner);
           state = jQuery().getState();
 
-          player = new Player(pHealth, sanity, strength, will, rerolls, state);
-
           mHealth = jQuery().readSpinner(mHealthSpinner);
           damage = jQuery().readSpinner(damageSpinner);
           fear = jQuery().readSpinner(fearSpinner);
-
-          monster = new Monster(mHealth, damage, fear);
-
-          result = willTest(player, monster);
-          displayResults(result);
+          
+          var results = [];
+          
+          for(i = 0; i < 100; i++) {
+            player = new Player(pHealth, sanity, strength, will, rerolls, state);
+            monster = new Monster(mHealth, damage, fear);
+            // results.push(willTest(player, monster));
+          }
+          
+          displayResults(analyzeResults(results));
         }
 
-        function displayResults(result) {
+        function analyzeResults(results) {
+          analysis = new Result(0, 0, 0, false, false);
+          for(i = 0; i < results.length; i++) {
+            analysis.sanityLost += results[i].sanityLost;
+            analysis.healthLost += results[i].healthLost;
+            analysis.damageDealt += results[i].damageDealt;
+            if(results[i].playerDeath) {
+              analysis.playerDeath++;
+            }
+            if(results[i].monsterDeath) {
+              analysis.monsterDeath++;
+            }
+          }
+          analysis.sanityLost /= results.length;
+          analysis.healthLost /= results.length;
+          analysis.damageDealt /= results.length;
 
+          return analysis;
+        }
+
+        function displayResults(analysis) {
+          Docuement.getElementById("avgHL").innerHTML = analysis.healthLost;
+          Docuement.getElementById("avgSL").innerHTML = analysis.sanityLost;
+          Docuement.getElementById("avgDD").innerHTML = analysis.damageDealt;
+          Docuement.getElementById("pD").innerHTML = analysis.playerDeath;
+          Docuement.getElementById("mD").innerHTML = analysis.monsterDeath;
         }
 
         function Player(health, sanity, strength, will, rerolls, state) {
@@ -296,7 +323,11 @@
         <!--Can toggle between panel-success or panel-failure depending on results-->
         <div class="panel panel-success">
           <div class="panel-heading"> Panel Header </div>
-          <div class="panel-body"> Panel Body </div>
+          <div id="avgHL" class="panel-body"> Panel Body </div>
+          <div id="avgSL" class="panel-body"> Panel Body </div>
+          <div id="avgDD" class="panel-body"> Panel Body </div>
+          <div id="pD" class="panel-body"> Panel Body </div>
+          <div id="mD" class="panel-body"> Panel Body </div>
           <div class="panel-footer"> Panel Footer </div>
         </div>
       </div>
