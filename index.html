@@ -163,18 +163,18 @@
       damage = jQuery().readSpinner(damageSpinner);
       fear = jQuery().readSpinner(fearSpinner);
 
-      player = new Player(pHealth, sanity, strength, will, rerolls, parseInt(state));
+      player = new Player(pHealth, sanity, strength, will, rerolls, state - 0);
       monster = new Monster(mHealth, damage, fear);
 
       result = willTest(player, monster);
 
       var results = new Array();
 
-      for (i = 0; i < 10; i++) {
+      for (var i = 0; i < 10; i++) {
         player = new Player(pHealth, sanity, strength, will, rerolls, state);
         monster = new Monster(mHealth, damage, fear);
         // This line breaks. Is there no way to hold objects in an array?
-        // results.push(willTest(player, monster));
+        results.push(willTest(player, monster));
         console.log(willTest(player, monster).toString());
       }
 
@@ -315,8 +315,8 @@
       <div class="col-sm-6 player-stats-col">
         <h2 class="title"> Player Stats </h2>
         <div class="row">
-          <label for="pHealthInput"> Health:</label>
-          <input id="pHealthInput" type='number' max='10' min='0' placeholder='4' name="value">
+          <label for="pHealthSpinner"> Health:</label>
+          <input id="pHealthSpinner" type='number' max='10' min='0' placeholder='4' name="value">
         </div>
         <div class="row">
           <p class="spinner">
