@@ -110,7 +110,7 @@ var monsterCount = 0;
         analysis = new Result(0, 0, 0, false, false);
         var monsterKillPercent = 0;
         var playerDeathPercent = 0;
-        
+
         for(var j = 0; j < fightList.length; j++) {
           analysis.sanityLost += fightList[j].sanityLost;
           analysis.healthLost += fightList[j].healthLost;
@@ -127,7 +127,7 @@ var monsterCount = 0;
         analysis.damageDealt /= fightList.length;
         playerDeathPercent /= fightList.length;
         monsterKillPercent /= fightList.length;
-        
+
         displayResults(analysis, playerDeathPercent * 100, monsterKillPercent * 100, i, fightList.length);
       }
 
@@ -179,6 +179,7 @@ var monsterCount = 0;
     }
 
     function Monster(health, damage, fear) {
+      this.original = Number(health);
       this.health = Number(health);
       this.damage = Number(damage);
       this.fear = Number(fear);
@@ -265,4 +266,60 @@ var monsterCount = 0;
       }
       monster.health -= successes;
       return new Result(sanityLost, healthLost, successes, checkDead("player", player), checkDead("monster", monster), monsterNum);
+    }
+
+    /*
+    Loop through all permutations of the monster order to determine best order in terms of survival or killing %
+    */
+    function bestOrder() {
+      player = getPlayer();
+      var permutations = permutate(getMonsters());
+      var results = new Array();
+      var survivedAll = 0;
+
+      // Loop through permutations and for each determine their score based upon either survival or killing potential
+      for(var i = 0; i < permutations.length; i++) {
+        // 100 trials for this gauntlet
+        for(var j = 0; j < 100; j++) {
+          // This is going to be horribly inefficient. Need to reset health.
+          player = getPlayer();
+          // Loop through monsters in list
+          for(var k = 0; k < permutations[i].length; k++) {
+            permutations[i].health = permutations[i].original;
+            if(!checkDead("player", player)) {
+              // If player is alive go to next monster
+              results.push(willTest(player, permutations[i][k], k));
+            }
+          }
+          // Check to see if the player survived the gauntlet
+          if(!checkDead("player", player)) {
+            survivedAll++;
+          }
+        }
+        // Get the values I want to compare from the results
+      }
+      console.log("done with permutations");
+    }
+
+    function permutate(permutation) {
+      var length = permutation.length,
+          result = [permutation.slice()],
+          c = new Array(length).fill(0),
+          i = 1, k, p;
+
+      while (i < length) {
+        if (c[i] < i) {
+          k = i % 2 && c[i];
+          p = permutation[i];
+          permutation[i] = permutation[k];
+          permutation[k] = p;
+          ++c[i];
+          i = 1;
+          result.push(permutation.slice());
+        } else {
+          c[i] = 0;
+          ++i;
+        }
+      }
+      return result;
     }
