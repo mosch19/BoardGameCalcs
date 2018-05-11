@@ -1,6 +1,20 @@
+import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import java.util.concurrent.ThreadLocalRandom;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+import java.io.Serializable;
+import java.lang.Comparable;
+
 class EclipseCalc extends JFrame {
     
     ElcipseCalc() {
+        setSize(700, 500);
+        setTitle("Eclipse Dogfight Sim");
+        Container c = getContentPane();
+
+        setVisible(true);
     }
 
     public static void main(String args[]) {
@@ -23,8 +37,14 @@ class Player {
     }
 
     // Loop through and get best ship
-    public Ship getTargetShip() {
-
+    public Ship getTarget() {
+        Ship target = ships.get(0);
+        for(Ship s : ships) {
+            if(s < target) {
+                s = target;
+            }
+            return s;
+        }
     }
 
     public static ArrayList<Ship> initiativeOrder(Player a, Player b) {
@@ -37,7 +57,7 @@ class Player {
 
 }
 
-class Ship {
+class Ship implements Comparable<Ship>, Serializable {
 
     private int hull, comp, shields, init, power;
     private boolean hasDrive;
@@ -55,8 +75,11 @@ class Ship {
         weapons.add(w);
     }
 
-    public void takeDamage(int damageVal) {
-        this.hull -= damageVal;
+    public void takeDamage(Damage d) {
+        if(damage.getCriticalHit() || ) {
+            this.hull -= damageVal;
+        }
+        
     }
 
     public boolean checkDead() {
@@ -65,14 +88,20 @@ class Ship {
 
     public void fire(Player opponent) {
         for each weapons
-            weapon.fire(opponent.getTarget());
+            weapon.fire(opponent.getTarget(), this.comp);
         target.takeDamage();
     }
 
+    @Override
+    public int compareTo(Ship s) {
+        return Integer.compare(init, s.init);
+    }
+
+    /*
     public static getOpponent(Player a, Player b) {
         if()
     }
-
+    */
 }
 
 class Weapon {
@@ -86,22 +115,29 @@ class Weapon {
         this.missile = missile;
     }
 
-    public Damage fire(int comp) {
-        // Get resulting damage, apply to ship
-        return null;
+    public boolean fire(Player opponent, int comp) {
+        // Get resulting damage, apply to ship, return if hit is recorded
+        opponent.takeDamage(damage);
     }
 
 }
 
 class Damage {
 
-    private int damageVal;
+    private int rollNum, damageVal;
     private boolean criticalHit;
 
-    Damage(int damageVal, boolean criticalHit) {
+    Damage(int rollNum, int damageVal, boolean criticalHit) {
+        this.rollNum = rollNum;
         this.damageVal = damageVal;
         this.criticalHit = criticalHit;
     }
+
+    public int getRollNum()  { return this.rollNum; }
+
+    public int getDamageVal() { return this.damageVal; }
+
+    public int getCriticalHit() { return this.criticalHit; }
 
 }
 
