@@ -109,10 +109,11 @@
             <button id='add-monster' type="button" class="btn btn-success btn-outline center-block" onclick="addMonster()"> Add </button>
           </div>
         </div>
+        <button type="button" class="btn btn-info btn-outline center-block" onclick="bestOrder();"> Get best order </button>
       </div>
     </div>
     <div class="container">
-      <button type="button" class="btn btn-primary btn-outline center-block" onclick="bestOrder();"> Fight! </button>
+      <button type="button" class="btn btn-primary btn-outline center-block" onclick="objectInput();"> Fight! </button>
     </div>
     <div class="results-container">
       <H2 id="gauntlet"> Results </H2>
@@ -126,7 +127,12 @@
         <div id="pD0" class="panel-body results-panel-body"> Player death % </div>
         <div id="mD0" class="panel-body results-panel-body"> Monster death % </div>
       </div>
-    </div>
+  </div>
+  <div id="permutations" class="panel panel-success">
+    <div class="panel-heading"> <h3> Monster Order </h3> </div>
+    <div id="perm0" class="panel-body results-panel-body"> Best order </div>
+    <div id="perm1" class="panel-body results-panel-body"> Second best </div>
+  </div>
     <div class="container">
       <p class="foot"> Note: This page has no affiliation to the designers/publishers of <a href="https://boardgamegeek.com/boardgame/146021/eldritch-horror"> Eldritch Horror. </a> </p>
     </div>

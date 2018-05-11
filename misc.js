@@ -271,21 +271,48 @@ var monsterCount = 0;
     /*
     Loop through all permutations of the monster order to determine best order in terms of survival or killing %
     */
+    function getScore(results, survivedAll) {
+      // Loop through the results and return a score based upon killing potential and survival
+      // Don't need to discriminate by monsters here. Only care about total killing % and survival %
+      // Sum up all the kills and total survivls and add then return as scores
+      // Append the scores to the permutations object so I can print them with the actual order using the toString()
+      var monstersKilled = 0;
+      for(var i = 0; i < results.length; i++) {
+        if(results[i].monsterDeath) {
+          monstersKilled++;
+        }
+      }
+      return monstersKilled + survivedAll;
+    }
+
+    function compare(a, b) {
+      if(a.score < b.score) {
+        return -1;
+      }
+      if(a.score > b.score) {
+        return 1;
+      }
+      return 0;
+    }
+
     function bestOrder() {
+      if(monsterCount < 1) {
+        return;
+      }
       player = getPlayer();
       var permutations = permutate(getMonsters());
-      var results = new Array();
-      var survivedAll = 0;
 
       // Loop through permutations and for each determine their score based upon either survival or killing potential
       for(var i = 0; i < permutations.length; i++) {
+        var results = new Array();
+        var survivedAll = 0;
         // 100 trials for this gauntlet
         for(var j = 0; j < 100; j++) {
           // This is going to be horribly inefficient. Need to reset health.
           player = getPlayer();
           // Loop through monsters in list
           for(var k = 0; k < permutations[i].length; k++) {
-            permutations[i].health = permutations[i].original;
+            permutations[i][k].health = permutations[i][k].original;
             if(!checkDead("player", player)) {
               // If player is alive go to next monster
               results.push(willTest(player, permutations[i][k], k));
@@ -297,8 +324,24 @@ var monsterCount = 0;
           }
         }
         // Get the values I want to compare from the results
+        permutations[i].score = getScore(results, survivedAll);
       }
-      console.log("done with permutations");
+      permutations.sort(compare);
+
+      var bestOrder = getMonsterElements(1, permutations[permutations.length - 1]);
+      var secondBest = getMonsterElements(2, permutations[permutations.length - 2]);
+
+      document.getElementById('perm0').innerHTML = "Best order: " + bestOrder + " with score of " + permutations[permutations.length - 1].score;
+      document.getElementById('perm1').innerHTML = "Second best: " + secondBest + " with score of " + permutations[permutations.length - 2].score;
+    }
+
+    function getMonsterElements(index, monsterList) {
+      var bestOrder = "";
+      for(var i = 0; i < monsterCount + 1; i++) {
+        monsterList[i].health = monsterList[i].original;
+        bestOrder += monsterList[i].toString() + " then ";
+      }
+      return bestOrder.substring(0, bestOrder.length - 6);
     }
 
     function permutate(permutation) {
