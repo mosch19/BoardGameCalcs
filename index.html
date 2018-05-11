@@ -87,31 +87,71 @@
       text-align: left;
       display: inline-block;
     }
+
+    .mSpinners {
+      text-align: center;
+    }
+
+
   </style>
   <script>
 
+    /*
+    Have global variale to hold number of monsters
+    when appending use that value in the ID fields
+    when removing use that value
+    have a second result object that holds counters for monster deaths rather than boolean
+    */
+
+    var monsterCount = 0;
+
     function addMonster() {
+        monsterCount++;
         $('.monster-container').append('<div class="row">'+
-            '<div class="col-sm-3">'+
+            '<div class="col-sm-3 mSpinners">'+
               '<p class="mSpinner">'+
-                '<label for="mHealthSpinner"> Health:</label>'+
-                '<input id="mHealthSpinner" name="value">'+
+                '<label for="mHealthSpinner' + monsterCount + '"> Health:</label>'+
+                '<input id="mHealthSpinner' + monsterCount + '" type="number" max="10" min="0" value="4" name="value">'+
               '</p>'+
             '</div>'+
-            '<div class="col-sm-3">'+
+            '<div class="col-sm-3 mSpinners">'+
               '<p class="mSpinner">'+
-                '<label for="damageSpinner"> Damage:</label>'+
-                '<input id="damageSpinner" name="value">'+
+                '<label for="damageSpinner' + monsterCount + '"> Damage:</label>'+
+                '<input id="damageSpinner' + monsterCount + '" type="number" max="10" min="0" value="4" name="value">'+
               '</p>'+
             '</div>'+
-            '<div class="col-sm-3">'+
+            '<div class="col-sm-3 mSpinners">'+
               '<p class="mSpinner">'+
-                '<label for="fearSpinner"> Fear:</label>'+
-                '<input id="fearSpinner" name="value">'+
+                '<label for="fearSpinner' + monsterCount + '"> Fear:</label>'+
+                '<input id="fearSpinner' + monsterCount + '" type="number" max="10" min="0" value="4" name="value">'+
               '</p>'+
             '</div>'+
           '</div>');
+        $('.results-container').append(
+          '<div id="results' + monsterCount + '" class="panel panel-success">' +
+            '<div class="panel-heading"> <h3> Monster ' + (monsterCount + 1) + '</h3> </div>' +
+            '<div id="trials' + monsterCount + '" class="panel-body"> Number of fights </div>' +
+            '<div id="avgHL' + monsterCount + '" class="panel-body"> Avg health loss </div>' +
+            '<div id="avgSL' + monsterCount + '" class="panel-body"> Avg sanity loss </div>' +
+            '<div id="avgDD' + monsterCount + '" class="panel-body"> Avg damage dealt </div>' +
+            '<div id="pD' + monsterCount + '" class="panel-body"> Player death % </div>' +
+            '<div id="mD' + monsterCount + '" class="panel-body"> Monster death % </div>' +
+          '</div>'
+        );
       }
+
+    function removeMonster() {
+      if(monsterCount > 0) {
+        $('label[for="mHealthSpinner' + monsterCount + '"]').remove();
+        $('#mHealthSpinner' + monsterCount).remove();
+        $('label[for="damageSpinner' + monsterCount + '"]').remove();
+        $('#damageSpinner' + monsterCount).remove();
+        $('label[for="fearSpinner' + monsterCount + '"]').remove();
+        $('#fearSpinner' + monsterCount).remove();
+        $('#results' + monsterCount).remove();
+        monsterCount--;
+      }
+    }
 
     function getPlayer() {
       var health = document.getElementById("pHealthSpinner").value;
@@ -124,69 +164,149 @@
       return new Player(health, sanity, strength, will, rerolls, status);
     }
 
-    function getMonster() {
-      var health = document.getElementById("mHealthSpinner").value;
-      var damage = document.getElementById("damageSpinner").value;
-      var fear = document.getElementById("fearSpinner").value;
+    function getMonster(num) {
+      var health = document.getElementById("mHealthSpinner" + num).value;
+      var damage = document.getElementById("damageSpinner" + num).value;
+      var fear = document.getElementById("fearSpinner" + num).value;
 
       return new Monster(health, damage, fear);
+    }
+
+    function getMonsters() {
+      var monsters = new Array();
+      for(var i = 0; i < monsterCount + 1; i++) {
+        monsters.push(getMonster(i));
+      }
+      return monsters;
     }
 
     function objectInput() {
 
       player = getPlayer();
-      monster = getMonster();
-
-      result = willTest(player, monster);
-
+      monsters = getMonsters();
+      var survivedAll = 0;
       var results = new Array();
 
       for (var i = 0; i < 100; i++) {
         player = getPlayer();
-        monster = getMonster();
-        results.push(willTest(player, monster));
-      }
+        monsters = getMonsters();
 
-      analyzeResults(results);
+        for(var j = 0; j < monsters.length; j++) {
+          if(!checkDead("player", player)) {
+            // If player is alive go to next monster
+            // need to make it so the results of all of these are combined
+            results.push(willTest(player, monsters[j], j));
+          }
+        }
+        // Check to see if the player survived the gauntlet
+        if(!checkDead("player", player)) {
+          console.log("I ran the gauntlet!");
+          survivedAll++;
+        }
+        // results.push(willTest(player, monster));
+        /*
+        player death will still be boolean but monsters killed will be average for multiple
+        monsters = getMonsters();
+        for(Monster m : monsters) {
+          if(player.isAlive()) {
+            willTest(player, monster[i]);
+          }
+        }
+        results.push(results);
+        while(player.hasRerolls() && isLethal()) {
+          use rerolls
+        }
+        only use them if the action is about to be lethal
+        */
+      }
+      console.log(monsters.length);
+      analyzeResults(results, survivedAll, monsters.length);
     }
 
-    function analyzeResults(results) {
-      analysis = new Result(0, 0, 0, false, false);
-      var monsterKillPercent = 0;
-      var playerDeathPercent = 0;
-      for (var i = 0; i < 100; i++) {
-        analysis.sanityLost += results[i].sanityLost;
-        analysis.healthLost += results[i].healthLost;
-        analysis.damageDealt += results[i].damageDealt;
-        if (results[i].playerDeath) {
-          playerDeathPercent++;
-        }
-        if (results[i].monsterDeath) {
-          monsterKillPercent++;
-        }
-      }
-      analysis.sanityLost /= results.length;
-      analysis.healthLost /= results.length;
-      analysis.damageDealt /= results.length;
+    function analyzeResults(results, survivedAll, numMonsters) {
+      var fightList;
+      for(var i = 0; i < numMonsters; i++) {
+        fightList = getFightsWithMonster(results, i);
 
-      displayResults(analysis, playerDeathPercent, monsterKillPercent);
+        analysis = new Result(0, 0, 0, false, false);
+        var monsterKillPercent = 0;
+        var playerDeathPercent = 0;
+        
+        for(var j = 0; j < fightList.length; j++) {
+          analysis.sanityLost += fightList[j].sanityLost;
+          analysis.healthLost += fightList[j].healthLost;
+          analysis.damageDealt += fightList[j].damageDealt;
+          if (fightList[j].playerDeath) {
+            playerDeathPercent++;
+          }
+          if (fightList[j].monsterDeath) {
+            monsterKillPercent++;
+          }
+        }
+        analysis.sanityLost /= fightList.length;
+        analysis.healthLost /= fightList.length;
+        analysis.damageDealt /= fightList.length;
+        playerDeathPercent /= fightList.length;
+        monsterKillPercent /= fightList.length;
+        
+        displayResults(analysis, playerDeathPercent * 100, monsterKillPercent * 100, i, fightList.length);
+
+        /*
+        analysis = new Result(0, 0, 0, false, false);
+        var monsterKillPercent = 0;
+        var playerDeathPercent = 0;
+        // Need to cap at number of fights with that monster
+        for (var j = 0; j < results.length; j++) {
+          analysis.sanityLost += results[j].sanityLost;
+          analysis.healthLost += results[j].healthLost;
+          analysis.damageDealt += results[j].damageDealt;
+          if (results[j].playerDeath) {
+            playerDeathPercent++;
+          }
+          if (results[j].monsterDeath) {
+            monsterKillPercent++;
+          }
+        }
+        analysis.sanityLost /= results.length;
+        analysis.healthLost /= results.length;
+        analysis.damageDealt /= results.length;
+
+        displayResults(analysis, playerDeathPercent, monsterKillPercent, i);
+        */
+      }
+
+      displayGauntletSurvival(survivedAll);
     }
 
-    function displayResults(analysis, playerDeathPercent, monsterKillPercent) {
-      document.getElementById("avgHL").innerHTML = "Average health loss: " + analysis.healthLost;
-      document.getElementById("avgSL").innerHTML = "Average sanity loss: " + analysis.sanityLost;
-      document.getElementById("avgDD").innerHTML = "Average damage dealt: " + analysis.damageDealt;
-      document.getElementById("pD").innerHTML = "Average player death: " + playerDeathPercent + "%";
-      document.getElementById("mD").innerHTML = "Average monster death: " + monsterKillPercent + "%";
+    function getFightsWithMonster(allResults, monsterNum) {
+      var fightList = new Array();
+      for(var i = 0; i < allResults.length; i++) {
+        if(allResults[i].monsterNum === monsterNum) {
+          fightList.push(allResults[i]);
+        }
+      }
+      return fightList;
+    }
+
+    function displayResults(analysis, playerDeathPercent, monsterKillPercent, monsterNum, trials) {
+      document.getElementById("trials" + monsterNum).innerHTML = "Number of fights: " + trials;
+      document.getElementById("avgHL" + monsterNum).innerHTML = "Average health loss: " + Math.round(analysis.healthLost * 100) / 100;
+      document.getElementById("avgSL" + monsterNum).innerHTML = "Average sanity loss: " + Math.round(analysis.sanityLost * 100) / 100;
+      document.getElementById("avgDD" + monsterNum).innerHTML = "Average damage dealt: " + Math.round(analysis.damageDealt * 100) / 100;
+      document.getElementById("pD" + monsterNum).innerHTML = "Average player death: " + Math.round(playerDeathPercent * 100) / 100 + "%";
+      document.getElementById("mD" + monsterNum).innerHTML = "Average monster death: " + Math.round(monsterKillPercent * 100) / 100 + "%";
 
       if(playerDeathPercent > 60) {
-        console.log('Here');
-        document.getElementById("results").classList.remove('panel-success');
-        document.getElementById("results").classList.add('panel-danger');
+        document.getElementById("results" + monsterNum).classList.remove('panel-success');
+        document.getElementById("results" + monsterNum).classList.add('panel-danger');
       } else {
-        document.getElementById("results").classList.remove('panel-danger');
-        document.getElementById("results").classList.add('panel-success');
+        document.getElementById("results" + monsterNum).classList.remove('panel-danger');
+        document.getElementById("results" + monsterNum).classList.add('panel-success');
     }
+    }
+
+    function displayGauntletSurvival(survivedAll) {
+      document.getElementById("gauntlet").innerHTML = "Results: You survived the gauntlet " + survivedAll + "% of the time.";
     }
 
     function Player(health, sanity, strength, will, rerolls, state) {
@@ -203,21 +323,22 @@
     }
 
     function Monster(health, damage, fear) {
-      this.health = health;
-      this.damage = damage;
-      this.fear = fear;
+      this.health = Number(health);
+      this.damage = Number(damage);
+      this.fear = Number(fear);
     }
 
     Monster.prototype.toString = function monsterToString() {
       return this.health + ", " + this.damage + ", " + this.fear;
     }
 
-    function Result(sanityLost, healthLost, damageDealt, playerDeath, monsterDeath) {
+    function Result(sanityLost, healthLost, damageDealt, playerDeath, monsterDeath, monsterNum) {
       this.sanityLost = sanityLost;
       this.healthLost = healthLost;
       this.damageDealt = damageDealt;
       this.playerDeath = playerDeath;
       this.monsterDeath = monsterDeath;
+      this.monsterNum = monsterNum;
     }
 
     Result.prototype.toString = function resultToString() {
@@ -236,7 +357,7 @@
       }
     }
 
-    function willTest(player, monster) {
+    function willTest(player, monster, monsterNum) {
       var successes = 0;
       var sanityLost = 0;
       for (var i = 0; i < player.will; i++) {
@@ -249,13 +370,13 @@
         player.sanity += sanityLost;
       }
       if (checkDead("player", player)) {
-        return new Result(sanityLost, 0, 0, true, false);
+        return new Result(sanityLost, 0, 0, true, false, monsterNum);
       } else {
-        return strengthTest(player, monster, sanityLost);
+        return strengthTest(player, monster, sanityLost, monsterNum);
       }
     }
 
-    function strengthTest(player, monster, sanityLost) {
+    function strengthTest(player, monster, sanityLost, monsterNum) {
       var successes = 0;
       var healthLost = 0;
       for (var i = 0; i < player.strength; i++) {
@@ -268,7 +389,7 @@
         player.health += healthLost;
       }
       monster.health -= successes;
-      return new Result(sanityLost, healthLost, successes, checkDead("player", player), checkDead("monster", monster));
+      return new Result(sanityLost, healthLost, successes, checkDead("player", player), checkDead("monster", monster), monsterNum);
     }
 
   </script>
@@ -340,26 +461,32 @@
         <h2 class="title"> Monster Stats </h2>
         <div class="monster-container">
           <div class="row">
-            <div class="col-sm-3">
-                <label for="mHealthSpinner"> Health:</label>
-              <input id="mHealthSpinner" type='number' max='10' min='0' value='4' name="value">
+            <div class="col-sm-3 mSpinners">
+              <p class="mSpinner">
+                <label for="mHealthSpinner0"> Health:</label>
+              <input id="mHealthSpinner0" type='number' max='10' min='0' value='4' name="value">
+                </p>
             </div>
-            <div class="col-sm-3">
-                <label for="damageSpinner"> Damage:</label>
-              <input id="damageSpinner" type='number' max='10' min='0' value='4' name="value">
+            <div class="col-sm-3 mSpinners">
+              <p class="mSpinner">  
+              <label for="damageSpinner0"> Damage:</label>
+              <input id="damageSpinner0" type='number' max='10' min='0' value='4' name="value">
+                </p>
             </div>
-            <div class="col-sm-3">
-                <label for="fearSpinner"> Fear:</label>
-              <input id="fearSpinner" type='number' max='10' min='0' value='4' name="value">
+            <div class="col-sm-3 mSpinners">
+              <p class="mSpinner">
+              <label for="fearSpinner0"> Fear: </label>
+              <input id="fearSpinner0" type='number' max='10' min='0' value='4' name="value">
+            </p>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-6">
-            <button type="button" class="btn btn-danger btn-outline">Remove</button>
+            <button type="button" class="btn btn-danger btn-outline" onclick="removeMonster()"> Remove </button>
           </div>
           <div class="col-sm-6">
-            <button id='add-monster' type="button" class="btn btn-success btn-outline" onclick="addMonster()">Add</button>
+            <button id='add-monster' type="button" class="btn btn-success btn-outline" onclick="addMonster()"> Add </button>
           </div>
         </div>
       </div>
@@ -367,15 +494,17 @@
     <div class="container">
       <button type="button" class="btn btn-primary btn-outline center-block" onclick="objectInput();"> Fight! </button>
     </div>
-    <div class="container">
+    <div class="results-container">
+      <H2 id="gauntlet"> Results </H2>
       <!--Can toggle between panel-success or panel-failure depending on results-->
-      <div id="results" class="panel panel-success">
-        <div class="panel-heading"> <h3> Results </h3> </div>
-        <div id="avgHL" class="panel-body"> Avg health loss </div>
-        <div id="avgSL" class="panel-body"> Avg sanity loss </div>
-        <div id="avgDD" class="panel-body"> Avg damage dealt </div>
-        <div id="pD" class="panel-body"> Player death % </div>
-        <div id="mD" class="panel-body"> Monster death % </div>
+      <div id="results0" class="panel panel-success">
+        <div class="panel-heading"> <h3> Monster 1 </h3> </div>
+        <div id="trials0" class="panel-body"> Number of fights </div>
+        <div id="avgHL0" class="panel-body"> Avg health loss </div>
+        <div id="avgSL0" class="panel-body"> Avg sanity loss </div>
+        <div id="avgDD0" class="panel-body"> Avg damage dealt </div>
+        <div id="pD0" class="panel-body"> Player death % </div>
+        <div id="mD0" class="panel-body"> Monster death % </div>
       </div>
     </div>
     <div class="container">
