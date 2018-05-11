@@ -1,6 +1,6 @@
 .title {
     font-family: "Crimson Text";
-    background-color:darkslateblue; 
+    background-color:darkslateblue;
     color:ghostwhite;
   }
 
@@ -99,4 +99,8 @@
 
   .results-panel-body {
     background: rgba(102, 98, 104, 0.4);
+  }
+
+  .results-panel-footer {
+    background: rgba(72,61,139, .4);
   }
