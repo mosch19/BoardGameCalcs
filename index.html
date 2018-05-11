@@ -12,11 +12,18 @@
   <style>
     .title {
       font-family: "Crimson Text";
+      background-color:darkslateblue; 
+      color:ghostwhite;
+    }
+
+    .subtitle {
       text-align: center;
+      font-family: "Crimson Text";
     }
 
     .entry {
-      text-align: center;
+      font-family: "Crimson Text";
+      font-size: 20;
     }
 
     .spinner {
@@ -92,52 +99,61 @@
       text-align: center;
     }
 
+    .instructions {
+      text-align: center;
+      font-size: 20;
+      font-family: "Crimson Text";
+    }
+
+    input[type="number"] {
+      background-color: transparent;
+    }
+
+    .results-panel-body {
+      background: rgba(102, 98, 104, 0.4);
+    }
+
 
   </style>
   <script>
 
-    /*
-    Have global variale to hold number of monsters
-    when appending use that value in the ID fields
-    when removing use that value
-    have a second result object that holds counters for monster deaths rather than boolean
-    */
-
     var monsterCount = 0;
 
     function addMonster() {
-        monsterCount++;
-        $('.monster-container').append('<div class="row">'+
-            '<div class="col-sm-3 mSpinners">'+
-              '<p class="mSpinner">'+
-                '<label for="mHealthSpinner' + monsterCount + '"> Health:</label>'+
-                '<input id="mHealthSpinner' + monsterCount + '" type="number" max="10" min="0" value="4" name="value">'+
-              '</p>'+
-            '</div>'+
-            '<div class="col-sm-3 mSpinners">'+
-              '<p class="mSpinner">'+
-                '<label for="damageSpinner' + monsterCount + '"> Damage:</label>'+
-                '<input id="damageSpinner' + monsterCount + '" type="number" max="10" min="0" value="4" name="value">'+
-              '</p>'+
-            '</div>'+
-            '<div class="col-sm-3 mSpinners">'+
-              '<p class="mSpinner">'+
-                '<label for="fearSpinner' + monsterCount + '"> Fear:</label>'+
-                '<input id="fearSpinner' + monsterCount + '" type="number" max="10" min="0" value="4" name="value">'+
-              '</p>'+
-            '</div>'+
-          '</div>');
-        $('.results-container').append(
-          '<div id="results' + monsterCount + '" class="panel panel-success">' +
-            '<div class="panel-heading"> <h3> Monster ' + (monsterCount + 1) + '</h3> </div>' +
-            '<div id="trials' + monsterCount + '" class="panel-body"> Number of fights </div>' +
-            '<div id="avgHL' + monsterCount + '" class="panel-body"> Avg health loss </div>' +
-            '<div id="avgSL' + monsterCount + '" class="panel-body"> Avg sanity loss </div>' +
-            '<div id="avgDD' + monsterCount + '" class="panel-body"> Avg damage dealt </div>' +
-            '<div id="pD' + monsterCount + '" class="panel-body"> Player death % </div>' +
-            '<div id="mD' + monsterCount + '" class="panel-body"> Monster death % </div>' +
-          '</div>'
-        );
+        if(monsterCount < 5) {
+          monsterCount++;
+          $('.monster-container').append('<div class="row entry">'+
+              '<div class="col-sm-3 mSpinners">'+
+                '<p class="mSpinner">'+
+                  '<label for="mHealthSpinner' + monsterCount + '"> Health:</label>'+
+                  '<input id="mHealthSpinner' + monsterCount + '" type="number" max="10" min="0" value="4" name="value">'+
+                '</p>'+
+              '</div>'+
+              '<div class="col-sm-3 mSpinners">'+
+                '<p class="mSpinner">'+
+                  '<label for="damageSpinner' + monsterCount + '"> Damage:</label>'+
+                  '<input id="damageSpinner' + monsterCount + '" type="number" max="10" min="0" value="4" name="value">'+
+                '</p>'+
+              '</div>'+
+              '<div class="col-sm-3 mSpinners">'+
+                '<p class="mSpinner">'+
+                  '<label for="fearSpinner' + monsterCount + '"> Fear:</label>'+
+                  '<input id="fearSpinner' + monsterCount + '" type="number" max="10" min="0" value="4" name="value">'+
+                '</p>'+
+              '</div>'+
+            '</div>');
+          $('.results-container').append(
+            '<div id="results' + monsterCount + '" class="panel panel-success">' +
+              '<div class="panel-heading"> <h3> Monster ' + (monsterCount + 1) + '</h3> </div>' +
+              '<div id="trials' + monsterCount + '" class="panel-body results-panel-body"> Number of fights </div>' +
+              '<div id="avgHL' + monsterCount + '" class="panel-body results-panel-body"> Avg health loss </div>' +
+              '<div id="avgSL' + monsterCount + '" class="panel-body results-panel-body"> Avg sanity loss </div>' +
+              '<div id="avgDD' + monsterCount + '" class="panel-body results-panel-body"> Avg damage dealt </div>' +
+              '<div id="pD' + monsterCount + '" class="panel-body results-panel-body"> Player death % </div>' +
+              '<div id="mD' + monsterCount + '" class="panel-body results-panel-body"> Monster death % </div>' +
+            '</div>'
+          );
+        }
       }
 
     function removeMonster() {
@@ -194,32 +210,14 @@
         for(var j = 0; j < monsters.length; j++) {
           if(!checkDead("player", player)) {
             // If player is alive go to next monster
-            // need to make it so the results of all of these are combined
             results.push(willTest(player, monsters[j], j));
           }
         }
         // Check to see if the player survived the gauntlet
         if(!checkDead("player", player)) {
-          console.log("I ran the gauntlet!");
           survivedAll++;
         }
-        // results.push(willTest(player, monster));
-        /*
-        player death will still be boolean but monsters killed will be average for multiple
-        monsters = getMonsters();
-        for(Monster m : monsters) {
-          if(player.isAlive()) {
-            willTest(player, monster[i]);
-          }
-        }
-        results.push(results);
-        while(player.hasRerolls() && isLethal()) {
-          use rerolls
-        }
-        only use them if the action is about to be lethal
-        */
       }
-      console.log(monsters.length);
       analyzeResults(results, survivedAll, monsters.length);
     }
 
@@ -250,29 +248,6 @@
         monsterKillPercent /= fightList.length;
         
         displayResults(analysis, playerDeathPercent * 100, monsterKillPercent * 100, i, fightList.length);
-
-        /*
-        analysis = new Result(0, 0, 0, false, false);
-        var monsterKillPercent = 0;
-        var playerDeathPercent = 0;
-        // Need to cap at number of fights with that monster
-        for (var j = 0; j < results.length; j++) {
-          analysis.sanityLost += results[j].sanityLost;
-          analysis.healthLost += results[j].healthLost;
-          analysis.damageDealt += results[j].damageDealt;
-          if (results[j].playerDeath) {
-            playerDeathPercent++;
-          }
-          if (results[j].monsterDeath) {
-            monsterKillPercent++;
-          }
-        }
-        analysis.sanityLost /= results.length;
-        analysis.healthLost /= results.length;
-        analysis.damageDealt /= results.length;
-
-        displayResults(analysis, playerDeathPercent, monsterKillPercent, i);
-        */
       }
 
       displayGauntletSurvival(survivedAll);
@@ -357,6 +332,10 @@
       }
     }
 
+    function isLethal(defense, attack) {
+      return (Math.abs(attack) >= defense);
+    }
+
     function willTest(player, monster, monsterNum) {
       var successes = 0;
       var sanityLost = 0;
@@ -365,6 +344,14 @@
           successes++;
         }
       }
+      // Use rerolls if necessary
+      while(player.rerolls > 0 && isLethal(player.sanity, successes - monster.fear)) {
+        player.rerolls--;
+        if(diceRoll(player.state)) {
+          successes++;
+        }
+      }
+      // Suffer consequences
       if (successes < monster.fear) {
         sanityLost = successes - monster.fear;
         player.sanity += sanityLost;
@@ -384,6 +371,13 @@
           successes++;
         }
       }
+      // Use rerolls if necessary
+      while(player.rerolls > 0 && isLethal(player.health, successes - monster.damage)) {
+        player.rerolls--;
+        if(diceRoll(player.state)) {
+          successes++;
+        }
+      }
       if (successes < monster.damage) {
         healthLost = successes - monster.damage;
         player.health += healthLost;
@@ -396,16 +390,17 @@
 </head>
 
 
-<body>
-  <div class="jumbotron text-center">
+<body style="background-color:lightgrey;">
+  <div class="jumbotron text-center title">
     <h1> Eldritch Horror Combat Sim </h1>
     <p> By: Mike Moschetti </p>
   </div>
   <div class="container">
+      <p class="instructions"> Enter in the stats of the player and monsters and see how 100 encounters plays out! </p>
     <div class="row">
       <div class="col-sm-6 player-stats-col">
-        <h2 class="title"> Player Stats </h2>
-        <div class="row">
+        <h2 class="subtitle"> Player Stats </h2>
+        <div class="row entry">
           <div class="col-sm-6" style="text-align: center;">
             <div style="display: inline-block; text-align: left;"> Health: </div>
           </div>
@@ -413,7 +408,7 @@
               <input id="pHealthSpinner" type='number' max='10' min='0' value='4' name="value">
             </div>
         </div>
-        <div class="row">
+        <div class="row entry">
             <div class="col-sm-6" style="text-align: center;">
                 <div style="display: inline-block; text-align: left;"> Sanity: </div>
             </div>
@@ -421,7 +416,7 @@
                 <input id="sanitySpinner" type='number' max='10' min='0' value='4' name="value">
               </div>
         </div>
-        <div class="row">
+        <div class="row entry">
               <div class="col-sm-6" style="text-align: center;">
                   <div style="display: inline-block; text-align: left;"> Strength: </div>
               </div>
@@ -429,7 +424,7 @@
                   <input id="strengthSpinner" type='number' max='10' min='0' value='4' name="value">
                 </div>
         </div>
-        <div class="row">
+        <div class="row entry">
                 <div class="col-sm-6" style="text-align: center;">
                     <div style="display: inline-block; text-align: left;"> Will: </div>
                 </div>
@@ -437,7 +432,7 @@
                     <input id="willSpinner" type='number' max='10' min='0' value='4' name="value">
                   </div>
         </div>
-        <div class="row">
+        <div class="row entry">
                   <div class="col-sm-6" style="text-align: center;">
                       <div style="display: inline-block; text-align: left;"> Rerolls: </div>
                   </div>
@@ -445,7 +440,7 @@
                       <input id="rerollSpinner" type='number' max='10' min='0' value='0' name="value">
                     </div>
         </div>
-        <div class="row">
+        <div class="row entry">
           <div class="col-sm-3">
               <input type="radio" name="state" value="-1"> Blessed </input>
           </div>
@@ -458,9 +453,9 @@
         </div>
       </div>
       <div class="col-sm-6">
-        <h2 class="title"> Monster Stats </h2>
+        <h2 class="subtitle"> Monster Stats </h2>
         <div class="monster-container">
-          <div class="row">
+          <div class="row entry">
             <div class="col-sm-3 mSpinners">
               <p class="mSpinner">
                 <label for="mHealthSpinner0"> Health:</label>
@@ -481,12 +476,12 @@
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row entry">
           <div class="col-sm-6">
-            <button type="button" class="btn btn-danger btn-outline" onclick="removeMonster()"> Remove </button>
+            <button type="button" class="btn btn-danger btn-outline center-block" onclick="removeMonster()"> Remove </button>
           </div>
           <div class="col-sm-6">
-            <button id='add-monster' type="button" class="btn btn-success btn-outline" onclick="addMonster()"> Add </button>
+            <button id='add-monster' type="button" class="btn btn-success btn-outline center-block" onclick="addMonster()"> Add </button>
           </div>
         </div>
       </div>
@@ -499,16 +494,16 @@
       <!--Can toggle between panel-success or panel-failure depending on results-->
       <div id="results0" class="panel panel-success">
         <div class="panel-heading"> <h3> Monster 1 </h3> </div>
-        <div id="trials0" class="panel-body"> Number of fights </div>
-        <div id="avgHL0" class="panel-body"> Avg health loss </div>
-        <div id="avgSL0" class="panel-body"> Avg sanity loss </div>
-        <div id="avgDD0" class="panel-body"> Avg damage dealt </div>
-        <div id="pD0" class="panel-body"> Player death % </div>
-        <div id="mD0" class="panel-body"> Monster death % </div>
+        <div id="trials0" class="panel-body results-panel-body"> Number of fights </div>
+        <div id="avgHL0" class="panel-body results-panel-body"> Avg health loss </div>
+        <div id="avgSL0" class="panel-body results-panel-body"> Avg sanity loss </div>
+        <div id="avgDD0" class="panel-body results-panel-body"> Avg damage dealt </div>
+        <div id="pD0" class="panel-body results-panel-body"> Player death % </div>
+        <div id="mD0" class="panel-body results-panel-body"> Monster death % </div>
       </div>
     </div>
     <div class="container">
-      <p class="foot"> Note: This page has no affiliation to the designers/publishers. </p>
+      <p class="foot"> Note: This page has no affiliation to the designers/publishers of Eldrtich Horror. </p>
     </div>
 </body>
 
