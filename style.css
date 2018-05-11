@@ -1,0 +1,102 @@
+.title {
+    font-family: "Crimson Text";
+    background-color:darkslateblue; 
+    color:ghostwhite;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-family: "Crimson Text";
+  }
+
+  .entry {
+    font-family: "Crimson Text";
+    font-size: 20;
+  }
+
+  .spinner {
+    text-align: left;
+    display: inline-block;
+  }
+
+  .mSpinner {
+    text-align: left;
+    display: inline-block;
+    width: 20px;
+  }
+
+  .foot {
+    text-align: center;
+    font-size: 15;
+  }
+
+  .btn-outline {
+    background-color: transparent;
+    color: inherit;
+    transition: all .5s;
+  }
+
+  .btn-primary.btn-outline {
+    color: #428bca;
+  }
+
+  .btn-success.btn-outline {
+    color: #5cb85c;
+  }
+
+  .btn-info.btn-outline {
+    color: #5bc0de;
+  }
+
+  .btn-warning.btn-outline {
+    color: #f0ad4e;
+  }
+
+  .btn-danger.btn-outline {
+    color: #d9534f;
+  }
+
+  .btn-dark.btn-outline {
+    color: #343a40;
+  }
+
+  .btn-primary.btn-outline:hover,
+  .btn-success.btn-outline:hover,
+  .btn-info.btn-outline:hover,
+  .btn-warning.btn-outline:hover,
+  .btn-danger.btn-outline:hover,
+  .btn-dark.btn-outline:hover,
+    {
+    color: #fff;
+  }
+
+  .player-stats-col .row {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    marign-left: auto;
+    margin-right: auto;
+  }
+
+  .player-labels {
+    text-align: left;
+    display: inline-block;
+  }
+
+  .mSpinners {
+    text-align: center;
+  }
+
+  .instructions {
+    text-align: center;
+    font-size: 20;
+    font-family: "Crimson Text";
+  }
+
+  input[type="number"] {
+    background-color: transparent;
+  }
+
+  .results-panel-body {
+    background: rgba(102, 98, 104, 0.4);
+  }
