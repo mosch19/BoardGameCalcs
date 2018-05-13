@@ -152,7 +152,7 @@ var monsterCount = 0;
       document.getElementById("pD" + monsterNum).innerHTML = "Average player death: " + Math.round(playerDeathPercent * 100) / 100 + "%";
       document.getElementById("mD" + monsterNum).innerHTML = "Average monster death: " + Math.round(monsterKillPercent * 100) / 100 + "%";
 
-      if(playerDeathPercent > 60) {
+      if(playerDeathPercent > 50) {
         document.getElementById("results" + monsterNum).classList.remove('panel-success');
         document.getElementById("results" + monsterNum).classList.add('panel-danger');
       } else {
@@ -297,6 +297,7 @@ var monsterCount = 0;
 
     function bestOrder() {
       if(monsterCount < 1) {
+        document.getElementById('perm0').innerHTML = "Best order: Add more monsters see an estimate at the best order.";
         return;
       }
       player = getPlayer();
