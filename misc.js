@@ -298,6 +298,7 @@ var monsterCount = 0;
     function bestOrder() {
       if(monsterCount < 1) {
         document.getElementById('perm0').innerHTML = "Best order: Add more monsters see an estimate at the best order.";
+        document.getElementById('perm1').innerHTML = "Second best: ";
         return;
       }
       player = getPlayer();
