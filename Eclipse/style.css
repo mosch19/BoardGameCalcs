@@ -97,6 +97,23 @@
     background-color: transparent;
   }
 
+  .design-1-container {
+    padding-bottom: 10px;
+  }
+
+  .design-2-container {
+    padding-bottom: 10px;
+  }
+
+  .results-container {
+    padding-top: 10px;
+  }
+
+  .results-panel-header {
+    background-color: seagreen;
+    color: ghostwhite;
+  }
+
   .results-panel-body {
     background: rgba(102, 98, 104, 0.4);
   }

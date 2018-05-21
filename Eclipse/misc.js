@@ -3,12 +3,220 @@
 */
 var p1ShipCount;
 var p2ShipCount;
+var shipOptions;
+var starbaseOptions;
 
 /*
   All input functions. Should have drop downs that correspond to JSONs.
 */
 function getPlayer(num) {
 
+}
+
+/*
+  Do on case by case basis since starbase won't need power/drive and ancients are not configurable!
+*/
+function addDesign(num) {
+  var components;
+  var design = document.getElementById("design" + num).value;
+
+  // Can only have one design per ship.
+  if(checkExists(design, num)) {
+    return;
+  }
+
+  switch(design) {
+    case "interceptor":
+      shipDefault(design, num);
+      addInterceptor(design, num);
+      break;
+    case "cruiser":
+      shipDefault(design, num);
+      addCruiser(design, num, shipOptions);
+      break;
+    case "dreadnought":
+      shipDefault(design, num);
+      addDreadnought(design, num);
+      break;
+    case "starbase":
+    $('.design-' + num + '-container').append('<div class="row entry">'+
+        '<h3 id="' + design + num + '">' + design.charAt(0).toUpperCase() + design.slice(1) + '</h3>' +
+        '<div class="col-sm-6">'+
+          '<label for="quan' + design + num + '"> Quanitity:</label>' +
+          '<input id="' + design + num + '" type="number" max="7" min="0" value="1" name="value">' +
+        '</div>' +
+        '<div class="col-sm-6">'+
+          '<label for="drv' + design + num + '"> Base Power:</label>' +
+          '<p id="drv' + design + num + '"> 3</p>' +
+        '</div>' +
+      '</div>');
+      addCruiser(design, num, starbaseOptions);
+      $('.design-' + num + '-container').append('<div class="row entry">'+
+      '<div class="col-sm-3">' +
+        '<label for="cmp5' + design + num + '"> Add:</label>' +
+        '<select id="cmp5' + design + num + '">' +
+        starbaseOptions +
+        '</select>' +
+      '</div>' +
+      '</div>');
+      break;
+    case "ancient":
+      $('.design-' + num + '-container').append('<div class="row entry">'+
+          '<h3 id="' + design + num + '">' + design.charAt(0).toUpperCase() + design.slice(1) + '</h3>' +
+          '<label for="quan' + design + num + '"> Quanitity:</label>' +
+          '<input id="' + design + num + '" type="number" max="7" min="0" value="1" name="value">' +
+        '</div>' +
+      '<div class="row entry">'+
+        '<div class="col-sm-3">' +
+          '<label for="cmp1' + design + num + '"> Weapons:</label>' +
+          '<p id="cmp1' + design + num + '"> Ion Cannon x2 </p>' +
+        '</div>' +
+        '<div class="col-sm-3">' +
+          '<label for="cmp2' + design + num + '"> Computer:</label>' +
+          '<p id="cmp2' + design + num + '"> Electron (+1) </p>' +
+        '</div>' +
+        '<div class="col-sm-3">' +
+          '<label for="cmp2' + design + num + '"> Hull:</label>' +
+          '<p id="cmp2' + design + num + '"> Hull x1 </p>' +
+        '</div>' +
+      '</div>');
+      break;
+    case "gcds":
+      $('.design-' + num + '-container').append('<div class="row entry">'+
+          '<h3 id="' + design + num + '">' + design.toUpperCase() + '</h3>' +
+        '</div>' +
+      '<div class="row entry">'+
+        '<div class="col-sm-3">' +
+          '<label for="cmp1' + design + num + '"> Weapons:</label>' +
+          '<p id="cmp1' + design + num + '"> Ion Cannon x4 </p>' +
+        '</div>' +
+        '<div class="col-sm-3">' +
+          '<label for="cmp2' + design + num + '"> Computer:</label>' +
+          '<p id="cmp2' + design + num + '"> Electron (+1) </p>' +
+        '</div>' +
+        '<div class="col-sm-3">' +
+          '<label for="cmp2' + design + num + '"> Hull:</label>' +
+          '<p id="cmp2' + design + num + '"> Hull x7 </p>' +
+        '</div>' +
+      '</div>');
+      break;
+  }
+
+}
+
+function shipDefault(design, num) {
+  $('.design-' + num + '-container').append('<div class="row entry">'+
+      '<h3 id="' + design + num + '">' + design.charAt(0).toUpperCase() + design.slice(1) + '</h3>' +
+      '<div class="col-sm-3">'+
+        '<label for="quan' + design + num + '"> Quanitity:</label>' +
+        '<input id="' + design + num + '" type="number" max="7" min="0" value="1" name="value">' +
+      '</div>' +
+      '<div class="col-sm-3">'+
+        '<label for="pwrSrc' + design + num + '"> Power:</label>' +
+        '<select id="pwrSrc' + design + num + '">' +
+          '<option value="fusionsrc">Fusion Source</option>' +
+        '</select>' +
+      '</div>' +
+      '<div class="col-sm-3">'+
+        '<label for="drv' + design + num + '"> Drive:</label>' +
+        '<select id="drv' + design + num + '">' +
+          '<option value="fusion">Fusion Drive</option>' +
+        '</select>' +
+      '</div>' +
+    '</div>');
+}
+
+function addInterceptor(design, num) {
+  $('.design-' + num + '-container').append('<div class="row entry">'+
+    '<div class="col-sm-6">' +
+      '<label for="cmp1' + design + num + '"> Add:</label>' +
+      '<select id="cmp1' + design + num + '">' +
+        '<option value="fusion">Fusion Drive</option>' +
+      '</select>' +
+    '</div>' +
+    '<div class="col-sm-6">' +
+      '<label for="cmp2' + design + num + '"> Add:</label>' +
+      '<select id="cmp2' + design + num + '">' +
+        '<option value="fusion">Fusion Drive</option>' +
+      '</select>' +
+    '</div>' +
+  '</div>');
+}
+
+function addCruiser(design, num, options) {
+  $('.design-' + num + '-container').append('<div class="row entry">'+
+    '<div class="col-sm-6">' +
+      '<label for="cmp1' + design + num + '"> Add:</label>' +
+      '<select id="cmp1' + design + num + '">' +
+        options +
+      '</select>' +
+    '</div>' +
+    '<div class="col-sm-6">' +
+      '<label for="cmp2' + design + num + '"> Add:</label>' +
+      '<select id="cmp2' + design + num + '">' +
+        options +
+      '</select>' +
+    '</div>' +
+    '<div class="col-sm-6">' +
+      '<label for="cmp3' + design + num + '"> Add:</label>' +
+      '<select id="cmp3' + design + num + '">' +
+        options +
+      '</select>' +
+    '</div>' +
+    '<div class="col-sm-6">' +
+      '<label for="cmp4' + design + num + '"> Add:</label>' +
+      '<select id="cmp4' + design + num + '">' +
+        options +
+      '</select>' +
+    '</div>' +
+  '</div>');
+}
+
+function addDreadnought(design, num) {
+  $('.design-' + num + '-container').append('<div class="row entry">'+
+      '<div class="col-sm-3">' +
+        '<label for="cmp1' + design + num + '"> Add:</label>' +
+        '<select id="cmp1' + design + num + '">' +
+          '<option value="fusion">Fusion Drive</option>' +
+        '</select>' +
+      '</div>' +
+      '<div class="col-sm-3">' +
+        '<label for="cmp2' + design + num + '"> Add:</label>' +
+        '<select id="cmp2' + design + num + '">' +
+          '<option value="fusion">Fusion Drive</option>' +
+        '</select>' +
+      '</div>' +
+      '<div class="col-sm-3">' +
+        '<label for="cmp3' + design + num + '"> Add:</label>' +
+        '<select id="cmp3' + design + num + '">' +
+          '<option value="fusion">Fusion Drive</option>' +
+        '</select>' +
+      '</div>' +
+    '</div>' +
+    '<div class="row entry">' +
+      '<div class="col-sm-3">' +
+        '<label for="cmp4' + design + num + '"> Add:</label>' +
+        '<select id="cmp4' + design + num + '">' +
+          '<option value="fusion">Fusion Drive</option>' +
+        '</select>' +
+      '</div>' +
+      '<div class="col-sm-3">' +
+        '<label for="cmp5' + design + num + '"> Add:</label>' +
+        '<select id="cmp5' + design + num + '">' +
+          '<option value="fusion">Fusion Drive</option>' +
+        '</select>' +
+      '</div>' +
+      '<div class="col-sm-3">' +
+        '<label for="cmp6' + design + num + '"> Add:</label>' +
+        '<select id="cmp6' + design + num + '">' +
+          '<option value="fusion">Fusion Drive</option>' +
+        '</select>' +
+      '</div>' +
+  '</div>');
+}
+
+function checkExists(shipType, playerNum) {
+  return document.getElementById(shipType + playerNum) != null;
 }
 
 function getShip(num) {
@@ -41,7 +249,7 @@ function Ship(hull, comp, shield, init, power, weapons, teamID) {
   this.power = Number(power);
   this.weapons = Number(weapons);
   this.dead = false;
-  this.teamID = teamID:
+  this.teamID = teamID;
 }
 
 /*

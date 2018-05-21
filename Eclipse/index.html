@@ -21,9 +21,9 @@
   <div class="container">
       <p class="instructions"> Enter in the ships for each player and see how 100 battles play out! </p>
     <div class="row">
-      <div class="col-sm-6 player-stats-col">
+      <div class="col-sm-6">
         <h2 class="subtitle"> Player One </h2>
-        <div class="row entry">
+        <div class="row entry" style="padding-bottom:10px;">
           <div class="col-sm-6" style="text-align: center;">
             <div style="display: inline-block; text-align: left;"> Team name: </div>
           </div>
@@ -32,11 +32,8 @@
             </div>
         </div>
         <div class="row entry">
-            <h3> Ships </h3>
-        </div>
-        <div class="row entry">
               <div class="col-sm-6" style="text-align: center;">
-                <select>
+                <select id="design1">
                   <option value="interceptor">Interceptor</option>
                   <option value="cruiser">Cruiser</option>
                   <option value="dreadnought">Dreadnought</option>
@@ -46,13 +43,14 @@
                 </select>
               </div>
               <div class="col-sm-6 player-labels">
-                  <button id='add-ship' type="button" class="btn btn-success btn-outline center-block" onclick="addDesign()"> Add Design </button>
+                  <button id='add-ship-1' type="button" class="btn btn-success btn-outline center-block" onclick="addDesign(1)"> Add Design </button>
                 </div>
         </div>
+        <div class="design-1-container"></div>
       </div>
       <div class="col-sm-6">
         <h2 class="subtitle"> Player 2 </h2>
-        <div class="row entry">
+        <div class="row entry" style="padding-bottom:10px;">
           <div class="col-sm-6" style="text-align: center;">
             <div style="display: inline-block; text-align: left;"> Team name: </div>
           </div>
@@ -61,11 +59,8 @@
             </div>
         </div>
         <div class="row entry">
-            <h3> Ships </h3>
-        </div>
-        <div class="row entry">
               <div class="col-sm-6" style="text-align: center;">
-                <select>
+                <select id="design2">
                   <option value="interceptor">Interceptor</option>
                   <option value="cruiser">Cruiser</option>
                   <option value="dreadnought">Dreadnought</option>
@@ -75,26 +70,19 @@
                 </select>
               </div>
               <div class="col-sm-6 player-labels">
-                  <button id='add-ship' type="button" class="btn btn-success btn-outline center-block" onclick="addDesign()"> Add Design </button>
+                  <button id='add-ship-2' type="button" class="btn btn-success btn-outline center-block" onclick="addDesign(2)"> Add Design </button>
                 </div>
         </div>
+        <div class="design-2-container"></div>
       </div>
     </div>
     <div class="container">
-      <button type="button" class="btn btn-primary btn-outline center-block" onclick="objectInput(); bestOrder();"> Fight! </button>
+      <button type="button" class="btn btn-primary btn-outline center-block" onclick="objectInput();"> Battle! </button>
     </div>
     <div class="results-container">
-      <H2 id="gauntlet"> Results </H2>
       <!--Can toggle between panel-success or panel-failure depending on results-->
-      <div id="results0" class="panel panel-success">
-        <div class="panel-heading"> <h3> Monster 1 </h3> </div>
-        <div id="trials0" class="panel-body results-panel-body"> Number of fights </div>
-        <div id="avgHL0" class="panel-body results-panel-body"> Avg health loss </div>
-        <div id="avgSL0" class="panel-body results-panel-body"> Avg sanity loss </div>
-        <div id="avgDD0" class="panel-body results-panel-body"> Avg damage dealt </div>
-        <div id="pD0" class="panel-body results-panel-body"> Player death % </div>
-        <div id="mD0" class="panel-body results-panel-body"> Monster death % </div>
-        <div class="panel-footer results-panel-footer"> These monster results are for the current monster order. See below for optimal order. Rerolls are used if losing health or sanity would be lethal. </div>
+      <div id="results0" class="panel results-panel-header">
+        <div class="panel-heading"> <h3> Results </h3> </div>
       </div>
   </div>
     <div class="container">
