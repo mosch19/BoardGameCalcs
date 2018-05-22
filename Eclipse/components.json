@@ -1,0 +1,176 @@
+[
+  {
+    "name":"nuclear source",
+    "hull":0,
+    "comp":0,
+    "shield":0,
+    "init":0,
+    "power":3
+  },
+  {
+    "name":"fusion source",
+    "hull":0,
+    "comp":0,
+    "shield":0,
+    "init":0,
+    "power":6
+  },
+  {
+    "name":"tachyon source",
+    "hull":0,
+    "comp":0,
+    "shield":0,
+    "init":0,
+    "power":6
+  },
+  {
+    "name":"hypergrid source",
+    "hull":0,
+    "comp":0,
+    "shield":0,
+    "init":0,
+    "power":11
+  },
+  {
+    "name":"nuclear drive",
+    "hull":0,
+    "comp":0,
+    "shield":0,
+    "init":1,
+    "power":-1
+  },
+  {
+    "name":"fusion drive",
+    "hull":0,
+    "comp":0,
+    "shield":0,
+    "init":2,
+    "power":-2
+  },
+  {
+    "name":"tachyon drive",
+    "hull":0,
+    "comp":0,
+    "shield":0,
+    "init":3,
+    "power":-3
+  },
+  {
+    "name":"conformal drive",
+    "hull":0,
+    "comp":0,
+    "shield":0,
+    "init":2,
+    "power":-2
+  },
+  {
+    "name":"electron computer",
+    "hull":0,
+    "comp":1,
+    "shield":0,
+    "init":0,
+    "power":0
+  },
+  {
+    "name":"positron computer",
+    "hull":0,
+    "comp":2,
+    "shield":0,
+    "init":1,
+    "power":-1
+  },
+  {
+    "name":"gluon computer",
+    "hull":0,
+    "comp":3,
+    "shield":0,
+    "init":2,
+    "power":-2
+  },
+  {
+    "name":"axion computer",
+    "hull":0,
+    "comp":3,
+    "shield":0,
+    "init":0,
+    "power":0
+  },
+  {
+    "name":"gauss shield",
+    "hull":0,
+    "comp":0,
+    "shield":1,
+    "init":0,
+    "power":0
+  },
+  {
+    "name":"phase shield",
+    "hull":0,
+    "comp":0,
+    "shield":2,
+    "init":0,
+    "power":-1
+  },
+  {
+    "name":"flux shield",
+    "hull":0,
+    "comp":0,
+    "shield":3,
+    "init":0,
+    "power":-2
+  },
+  {
+    "name":"hull",
+    "hull":1,
+    "comp":0,
+    "shield":0,
+    "init":0,
+    "power":0
+  },
+  {
+    "name":"improved hull",
+    "hull":2,
+    "comp":0,
+    "shield":0,
+    "init":0,
+    "power":0
+  },
+  {
+    "name":"shard hull",
+    "hull":3,
+    "comp":0,
+    "shield":0,
+    "init":0,
+    "power":0
+  },
+  {
+    "name":"ion cannon",
+    "damage":1,
+    "diceNum":1,
+    "power":-1
+  },
+  {
+    "name":"plasma cannon",
+    "damage":2,
+    "diceNum":1,
+    "power":-2
+  },
+  {
+    "name":"antimatter cannon",
+    "damage":4,
+    "diceNum":1,
+    "power":-4
+  },
+  {
+    "name":"ion turret",
+    "damage":1,
+    "diceNum":2,
+    "power":-1
+  },
+  {
+    "name":"plasma missile",
+    "damage":2,
+    "diceNum":2,
+    "power":0
+  }
+]

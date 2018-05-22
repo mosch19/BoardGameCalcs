@@ -215,16 +215,19 @@ function addDreadnought(design, num) {
   '</div>');
 }
 
-function checkExists(shipType, playerNum) {
-  return document.getElementById(shipType + playerNum) != null;
+// Since any stat can be anywhere need way to check where it should be.
+function getShip(design, num) {
+  if(checkExists(design, num)) {
+    var hull = document.getElementById( + num).value;
+    var comp = document.getElementById( + num).value;
+    var shield = document.getElementById( + num).value;
+    var init = document.getElementById( + num).value;
+    var hull = document.getElementById( + num).value;
+  }
 }
 
-function getShip(num) {
-  var hull = document.getElementById("p1Hull" + num).value;
-  var comp = document.getElementById("p1Hull" + num).value;
-  var shield = document.getElementById("p1Hull" + num).value;
-  var init = document.getElementById("p1Hull" + num).value;
-  var hull = document.getElementById("p1Hull" + num).value;
+function checkExists(shipType, playerNum) {
+  return document.getElementById(shipType + playerNum) != null;
 }
 
 /*
