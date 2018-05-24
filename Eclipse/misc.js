@@ -8,6 +8,7 @@ var starbaseOptions;
 
 /*
   All input functions. Should have drop downs that correspond to JSONs.
+  When taking in input. Need to: search the JSON for the selected item, make sure there is drive/power
 */
 function getPlayer(num) {
 
@@ -40,7 +41,7 @@ function addDesign(num) {
       break;
     case "starbase":
     $('.design-' + num + '-container').append('<div class="row entry">'+
-        '<h3 id="' + design + num + '">' + design.charAt(0).toUpperCase() + design.slice(1) + '</h3>' +
+        '<h3 id="title-' + design + num + '">' + design.charAt(0).toUpperCase() + design.slice(1) + '</h3>' +
         '<div class="col-sm-6">'+
           '<label for="quan' + design + num + '"> Quanitity:</label>' +
           '<input id="' + design + num + '" type="number" max="7" min="0" value="1" name="value">' +
@@ -62,7 +63,7 @@ function addDesign(num) {
       break;
     case "ancient":
       $('.design-' + num + '-container').append('<div class="row entry">'+
-          '<h3 id="' + design + num + '">' + design.charAt(0).toUpperCase() + design.slice(1) + '</h3>' +
+          '<h3 id="title' + design + num + '">' + design.charAt(0).toUpperCase() + design.slice(1) + '</h3>' +
           '<label for="quan' + design + num + '"> Quanitity:</label>' +
           '<input id="' + design + num + '" type="number" max="7" min="0" value="1" name="value">' +
         '</div>' +
@@ -83,7 +84,7 @@ function addDesign(num) {
       break;
     case "gcds":
       $('.design-' + num + '-container').append('<div class="row entry">'+
-          '<h3 id="' + design + num + '">' + design.toUpperCase() + '</h3>' +
+          '<h3 id="title-' + design + num + '">' + design.toUpperCase() + '</h3>' +
         '</div>' +
       '<div class="row entry">'+
         '<div class="col-sm-3">' +
@@ -106,7 +107,7 @@ function addDesign(num) {
 
 function shipDefault(design, num) {
   $('.design-' + num + '-container').append('<div class="row entry">'+
-      '<h3 id="' + design + num + '">' + design.charAt(0).toUpperCase() + design.slice(1) + '</h3>' +
+      '<h3 id="title-' + design + num + '">' + design.charAt(0).toUpperCase() + design.slice(1) + '</h3>' +
       '<div class="col-sm-3">'+
         '<label for="quan' + design + num + '"> Quanitity:</label>' +
         '<input id="' + design + num + '" type="number" max="7" min="0" value="1" name="value">' +
@@ -244,7 +245,7 @@ function Player(name, ships, winNum, teamID) {
 /*
   Ship object to be held by players.
 */
-function Ship(hull, comp, shield, init, power, weapons, teamID) {
+function Ship(hull, comp, shield, init, power, weapons, hasDrive, teamID) {
   this.hull = Number(hull);
   this.comp = Number(comp);
   this.shield = Number(shield);
@@ -253,6 +254,7 @@ function Ship(hull, comp, shield, init, power, weapons, teamID) {
   this.weapons = Number(weapons);
   this.dead = false;
   this.teamID = teamID;
+  this.hasDrive = Boolean(hasDrive);
 }
 
 /*
@@ -355,6 +357,20 @@ function serveShip(player) {
 
 function checkDead(targetShip) {
   return targetShip.hull > 0;
+}
+
+/*
+  Ensure that ships have a drive.
+*/
+function checkDrive(ship) {
+  return ship.hasDrive != null;
+}
+
+/*
+  Ensure that ships have enough power.
+*/
+function checkPower(ship) {
+  return ship.power > 0;
 }
 
 /*
