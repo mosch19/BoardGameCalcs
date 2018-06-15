@@ -1,6 +1,7 @@
 /*
   Garbage global variables.
 */
+var shipTypes = {"interceptor":2, "crusier":4, "dreadnought":6, "starbase":4};
 var p1ShipCount;
 var p2ShipCount;
 var shipOptions;
@@ -10,7 +11,19 @@ var starbaseOptions;
   All input functions. Should have drop downs that correspond to JSONs.
 */
 function getPlayer(num) {
-
+  // Need to make lower case and read from JSON to get player stats.
+  for(var ship in shipTypes) {
+    if(document.getElementById(ship + num) != null) {
+      // Loop through and add the components.
+      for(var i = 1; i < shipTypes[ship] + 1; i++) {
+        // This is the name of the html element:
+        var element = document.getElementById("cmp" + i + ship + num);
+        var component = element.options[element.selectedIndex].text;
+        // Search the JSON to get the values to add
+        component.toLowerCase();
+      }
+    }
+  }
 }
 
 /*
