@@ -37,7 +37,8 @@
     "comp":0,
     "shield":0,
     "init":1,
-    "power":-1
+    "power":-1,
+    "hasDrive": true
   },
   {
     "name":"fusion drive",
@@ -45,7 +46,8 @@
     "comp":0,
     "shield":0,
     "init":2,
-    "power":-2
+    "power":-2,
+    "hasDrive": true
   },
   {
     "name":"tachyon drive",
@@ -53,7 +55,8 @@
     "comp":0,
     "shield":0,
     "init":3,
-    "power":-3
+    "power":-3,
+    "hasDrive": true
   },
   {
     "name":"conformal drive",
@@ -61,7 +64,8 @@
     "comp":0,
     "shield":0,
     "init":2,
-    "power":-2
+    "power":-2,
+    "hasDrive": true
   },
   {
     "name":"electron computer",

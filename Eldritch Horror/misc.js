@@ -146,19 +146,29 @@ var monsterCount = 0;
 
     function displayResults(analysis, playerDeathPercent, monsterKillPercent, monsterNum, trials) {
       document.getElementById("trials" + monsterNum).innerHTML = "Number of fights: " + trials;
-      document.getElementById("avgHL" + monsterNum).innerHTML = "Average health loss: " + Math.round(analysis.healthLost * 100) / 100;
-      document.getElementById("avgSL" + monsterNum).innerHTML = "Average sanity loss: " + Math.round(analysis.sanityLost * 100) / 100;
-      document.getElementById("avgDD" + monsterNum).innerHTML = "Average damage dealt: " + Math.round(analysis.damageDealt * 100) / 100;
-      document.getElementById("pD" + monsterNum).innerHTML = "Average player death: " + Math.round(playerDeathPercent * 100) / 100 + "%";
-      document.getElementById("mD" + monsterNum).innerHTML = "Average monster death: " + Math.round(monsterKillPercent * 100) / 100 + "%";
-
-      if(playerDeathPercent > 50) {
+      if(trials === 0) {
+        document.getElementById("avgHL" + monsterNum).innerHTML = "Average health loss: ...";
+        document.getElementById("avgSL" + monsterNum).innerHTML = "Average sanity loss: ...";
+        document.getElementById("avgDD" + monsterNum).innerHTML = "Average damage dealt: ...";
+        document.getElementById("pD" + monsterNum).innerHTML = "Average player death: ...";
+        document.getElementById("mD" + monsterNum).innerHTML = "Average monster death: ...";
         document.getElementById("results" + monsterNum).classList.remove('panel-success');
-        document.getElementById("results" + monsterNum).classList.add('panel-danger');
+        document.getElementById("results" + monsterNum).classList.add('panel-danger')
       } else {
-        document.getElementById("results" + monsterNum).classList.remove('panel-danger');
-        document.getElementById("results" + monsterNum).classList.add('panel-success');
-    }
+        document.getElementById("avgHL" + monsterNum).innerHTML = "Average health loss: " + Math.round(analysis.healthLost * 100) / 100;
+        document.getElementById("avgSL" + monsterNum).innerHTML = "Average sanity loss: " + Math.round(analysis.sanityLost * 100) / 100;
+        document.getElementById("avgDD" + monsterNum).innerHTML = "Average damage dealt: " + Math.round(analysis.damageDealt * 100) / 100;
+        document.getElementById("pD" + monsterNum).innerHTML = "Average player death: " + Math.round(playerDeathPercent * 100) / 100 + "%";
+        document.getElementById("mD" + monsterNum).innerHTML = "Average monster death: " + Math.round(monsterKillPercent * 100) / 100 + "%";
+      
+        if(playerDeathPercent > 50) {
+          document.getElementById("results" + monsterNum).classList.remove('panel-success');
+          document.getElementById("results" + monsterNum).classList.add('panel-danger');
+        } else {
+          document.getElementById("results" + monsterNum).classList.remove('panel-danger');
+          document.getElementById("results" + monsterNum).classList.add('panel-success');
+        }
+      }
     }
 
     function displayGauntletSurvival(survivedAll) {
