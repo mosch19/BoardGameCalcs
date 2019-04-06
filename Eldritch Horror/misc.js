@@ -181,7 +181,7 @@ var monsterCount = 0;
       this.strength = Number(strength);
       this.will = Number(will);
       this.rerolls = Number(rerolls);
-      this.state = Number(state);
+      this.state = Number(state);b
     }
 
     Player.prototype.toString = function playerToString() {
